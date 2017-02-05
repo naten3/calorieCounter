@@ -1,4 +1,13 @@
-<h1 class="bd-pageheader text-center text-sm-left">
-  {{title}}
-</h1>
-<router-outlet></router-outlet>
+<div style="padding: 2em">
+
+  <div class="bd-pageheader text-center text-sm-left row-fluid">
+    <h1>
+      {{title}}
+    </h1>
+    <button type="button" class="btn btn-warning"
+    [style.visibility]="loggedIn ? 'visible' : 'hidden'" (click)="logout()">
+      Log Out
+    </button>
+  </div>
+  <router-outlet></router-outlet>
+</div>

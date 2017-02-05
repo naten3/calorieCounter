@@ -4,13 +4,16 @@ import { Router } from '@angular/router'
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
 import { User } from '../models'
 
 @Injectable()
 export class UserService implements OnInit{
   private USER_LOCAL_KEY: string = "USER";
-  private X_AUTH_HEADER: string = "x-auth-header";
-  private baseUrl :string = "localhost:8080/";
+  private X_AUTH_HEADER: string = "x-auth-token";
+  private baseUrl :string = "/api";
   private loginObservable: Observable<boolean> = new Observable<boolean>();
   private loginSubject: BehaviorSubject<User> = new BehaviorSubject(null);
 
@@ -39,7 +42,7 @@ export class UserService implements OnInit{
     .map(res => res.status == 200);
   }
 
-  login(username: string, password: string) :Observable<boolean> {
+  login(username: string, password: string) :Observable<User> {
     const body = new URLSearchParams();
     body.set("username", username);
     body.set("password", password);
@@ -50,18 +53,23 @@ export class UserService implements OnInit{
       headers : headers }).map(res => {
         if (res.status == 200) {
           let token: string = res.headers.get(this.X_AUTH_HEADER);
-          let responseUser: User = res.json();
-          responseUser.setToken(token);
+          let responseUser: User = new User(res.json().id, res.json().username, res.json().roles, token);
           localStorage.setItem( this.USER_LOCAL_KEY, JSON.stringify(responseUser));
           this.loginSubject.next(responseUser);
-          return true;
+          return responseUser;
         } else {
-          return false;
+          return null;
+        }
+      }).catch( error => {
+        if (error.status === 401) {
+          return Observable.of(null);
+        } else {
+          return Observable.throw(error);
         }
       });
-    }
+  }
 
-  private logout(hitEndpoint?: boolean) {
+  public logout(hitEndpoint?: boolean) {
     let user: User = this.loginSubject.value;
     if (user != null) {
       if (hitEndpoint == undefined || hitEndpoint) {
@@ -80,8 +88,24 @@ export class UserService implements OnInit{
     return headers;
   }
 
+  public getLoginSubject() :BehaviorSubject<User> {
+    return this.loginSubject;
+  }
+
+  public getAuthHeader() :Headers{
+    return this.authHeaders(this.loginSubject.value);
+  }
+
+  public getUser(): User {
+    return this.loginSubject.value;
+  }
+
   public getLoginObservable() :Observable<User> {
     return this.loginSubject.asObservable();
+  }
+
+  public getLoginStatusObservable() :Observable<boolean> {
+    return this.loginSubject.asObservable().map(user => {return user != null});
   }
 
 }

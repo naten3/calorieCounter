@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate, OnDestroy {
 
   constructor(private router: Router, private userService: UserService) {
     this.logginSubscription = userService.getLoginObservable().subscribe(user => {
-      console.log("user is not logged in")
       this.loggedIn = (user != null);
     })
   }

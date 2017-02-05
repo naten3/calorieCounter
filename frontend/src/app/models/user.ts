@@ -12,11 +12,10 @@ export class User {
     private token: string
   ){}
 
+  getId() :number {
+    return this.id;
+  }
   getToken() :string {
     return this.token;
-  }
-
-  setToken(token: string) {
-    this.token = token;
   }
 }

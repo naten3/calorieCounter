@@ -1,18 +1,28 @@
+export class Meal {
 
-export class User {
+  public id: number;
+  public userId: number;
+  public mealTime: Date;
+  public calorieValue: number;
+  public description: string;
 
-  public static USER_ROLE = "USER";
-  public static USER_ADMIN_ROLE = "USER_ADMIN";
-  public static ADMIN_ROLE = "ADMIN";
+  constructor(source?: any){
+    if (typeof source !== "undefined") {
+      this.id = source.id
+      this.userId = source.userId;
+      this.mealTime = new Date(source.mealTime);
+      this.calorieValue = source.calorieValue;
+      this.description = source.description;
+    }
+  }
 
-  constructor(
-    private id: number,
-    private username: string,
-    private roles: string[],
-    private token: string
-  ){}
-
-  getToken() :string {
-    return this.token;
+  clone() :Meal {
+    let meal: Meal = new Meal();
+    meal.id = this.id;
+    meal.userId = this.userId;
+    meal.mealTime = this.mealTime;
+    meal.calorieValue = this.calorieValue;
+    meal.description = this.description;
+    return meal;
   }
 }

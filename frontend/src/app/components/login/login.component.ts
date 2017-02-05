@@ -11,6 +11,7 @@ export class LoginComponent implements OnInit {
     model: any = {};
     loading = false;
     returnUrl: string;
+    invalidLoginAttempt: boolean = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -22,10 +23,11 @@ export class LoginComponent implements OnInit {
     login() {
         this.loading = true;
         this.userService.login(this.model.username, this.model.password).subscribe(
-                loggedIn => {
-                    if ( loggedIn ) {
-                      console.log("Logged in!")
-                      this.router.navigate(["home"]);
+                user => {
+                    this.loading = false;
+                    this.invalidLoginAttempt = user == null;
+                    if ( user != null ) {
+                      this.router.navigate([`user/${user.getId()}/meals`]); //TODO make constnat template instead of this
                     }
                 });
     }

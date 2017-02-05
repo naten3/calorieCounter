@@ -13,8 +13,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+//@Component
+//@Order(Ordered.HIGHEST_PRECEDENCE)
 class CorsFilter implements Filter {
 
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {
