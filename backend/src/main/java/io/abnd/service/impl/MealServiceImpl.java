@@ -1,5 +1,7 @@
 package io.abnd.service.impl;
+import io.abnd.entity.Meal;
 import io.abnd.entity.User;
+import io.abnd.model.MealRequest;
 import io.abnd.model.MealResponse;
 import io.abnd.model.UserResponse;
 import io.abnd.repository.MealRepository;
@@ -26,10 +28,37 @@ public class MealServiceImpl implements MealService {
     this.mealRepository = mealRepository;
   }
 
+  @Override
   public Page<MealResponse> findByUserId(long userId, Pageable pageable) {
-    return mealRepository.findByUserId(userId, pageable).map(meal -> {
-      return new MealResponse(meal.getId(), meal.getUserId(), meal.getMealTime(), meal.getCalorieValue(),
-      meal.getDescription());
-    });
+    return mealRepository.findByUserId(userId, pageable).map(meal -> convertToResponse(meal));
+  }
+
+  @Override
+  public MealResponse createMeal(final long userId, final MealRequest mealRequest) {
+    Meal meal = convertToMeal(userId, null, mealRequest);
+    mealRepository.save(meal);
+    return convertToResponse(meal);
+  }
+
+  @Override
+  public MealResponse updateMeal(final long userId, final long mealId, final MealRequest mealRequest) {
+    Meal meal = convertToMeal(userId, mealId, mealRequest);
+    mealRepository.save(meal);
+    return convertToResponse(meal);
+  }
+
+  private MealResponse convertToResponse(Meal meal) {
+    return new MealResponse(meal.getId(), meal.getUserId(), meal.getMealTime(), meal.getCalorieValue(),meal.getDescription());
+  }
+
+  private Meal convertToMeal(final long userId, final Long mealId, MealRequest mealRequest) {
+    Meal meal = new Meal();
+    meal.setId(userId);
+    meal.setUserId(userId);
+    meal.setCalorieValue(mealRequest.getCalorieValue());
+    meal.setDescription(mealRequest.getDescription());
+    meal.setMealTime(mealRequest.getMealTime());
+
+    return meal;
   }
 }

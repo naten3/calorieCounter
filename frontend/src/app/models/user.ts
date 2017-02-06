@@ -6,16 +6,9 @@ export class User {
   public static ADMIN_ROLE = "ADMIN";
 
   constructor(
-    private id: number,
-    private username: string,
-    private roles: string[],
-    private token: string
+    public id: number,
+    public username: string,
+    public roles: string[],
+    public token: string
   ){}
-
-  getId() :number {
-    return this.id;
-  }
-  getToken() :string {
-    return this.token;
-  }
 }

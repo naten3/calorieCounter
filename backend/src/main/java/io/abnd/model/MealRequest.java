@@ -1,39 +1,18 @@
-package io.abnd.entity;
+package io.abnd.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-public class Meal {
-
-  @Id
-  @GeneratedValue
-  @Column(name = "MEAL_ID")
-  private long id;
-  @Column(updatable = false)
-  private long userId;
+public class MealRequest {
   private LocalDateTime mealTime;
   private int calorieValue;
   private String description;
 
-  public long getId() {
-    return id;
-  }
+  public MealRequest(final LocalDateTime mealTime,
+                     final int calorieValue, final String description) {
 
-  public void setId(final long id) {
-    this.id = id;
-  }
-
-  public long getUserId() {
-    return userId;
-  }
-
-  public void setUserId(final long userId) {
-    this.userId = userId;
+    this.mealTime = mealTime;
+    this.calorieValue = calorieValue;
+    this.description = description;
   }
 
   public LocalDateTime getMealTime() {

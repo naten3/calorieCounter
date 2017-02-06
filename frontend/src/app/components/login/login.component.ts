@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                     this.invalidLoginAttempt = user == null;
                     if ( user != null ) {
-                      this.router.navigate([`user/${user.getId()}/meals`]); //TODO make constnat template instead of this
+                      this.router.navigate([`user/${user.id}/meals`]); //TODO make constnat template instead of this
                     }
                 });
     }

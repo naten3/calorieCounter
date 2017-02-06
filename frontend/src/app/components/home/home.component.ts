@@ -6,14 +6,14 @@ import { MealSaveAction, MealActionType } from '../../actions';
 import { AddUpdateMealComponent } from './';
 
 @Component({
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
   public static PAGE_SIZE: number = 2;
   page: number = 0;
   mealPage: PaginatedData;
   loadingPage: boolean = false;
+  mealSave: EventEmitter<MealSaveAction>;
 
   @ViewChild('addUpdateMeal') addUpdateMealComponent: AddUpdateMealComponent;
 
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
   }
 
   updatePage(newPage: number) {
-    this.mealService.getUserMeals(this.userService.getUser().getId(), newPage, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
+    this.mealService.getUserMeals(this.userService.getUser().id, newPage, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
       this.mealPage = mealPage;
     })
   }
@@ -55,6 +55,18 @@ export class HomeComponent implements OnInit {
     meal.description = '';
     meal.calorieValue = null;
     this.addUpdateMealComponent.showModal(new MealSaveRequest(), MealActionType.CREATE);
+  }
+
+  handleSaveRequest(m: MealSaveAction) {
+    if (m.action == MealActionType.CREATE) {
+      this.mealService.createMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
+        this.addUpdateMealComponent.mealSaveSucceded();
+      });
+    } else {
+      this.mealService.updateMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
+        this.addUpdateMealComponent.mealSaveSucceded();
+      });
+    }
   }
 
 }

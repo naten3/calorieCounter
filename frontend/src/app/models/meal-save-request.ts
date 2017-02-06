@@ -1,7 +1,8 @@
 import { Meal } from './';
 
 export class MealSaveRequest {
-  public mealTime: string;
+  public id: number;
+  public mealTime: Date;
   public calorieValue: number;
   public description: string;
 
@@ -9,9 +10,17 @@ export class MealSaveRequest {
 
   static ofMeal(meal: Meal) :MealSaveRequest {
     let mealRequest: MealSaveRequest = new MealSaveRequest();
-    meal.mealTime = meal.mealTime;
-    meal.calorieValue = meal.calorieValue;
-    meal.description = meal.description;
+    mealRequest.id = meal.id;
+    mealRequest.mealTime = meal.mealTime;
+    mealRequest.calorieValue = meal.calorieValue;
+    mealRequest.description = meal.description;
     return mealRequest;
+  }
+
+  toRequestJson() {
+    let res: any =  {
+    mealTime : this.mealTime.toUTCString(),
+    calorieValue : this.calorieValue,
+    description : this.description}
   }
 }

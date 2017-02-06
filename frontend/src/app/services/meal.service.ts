@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { HttpUtils } from '../common';
 import { UserService } from './'
-import { User, Meal, PaginatedData } from '../models'
+import { User, Meal, MealSaveRequest, PaginatedData } from '../models'
 
 @Injectable()
 export class MealService implements OnInit {
@@ -27,6 +27,22 @@ export class MealService implements OnInit {
           return new PaginatedData(res.json(), Meal);
       });
         //TODO error handling
+  }
+
+  public updateMeal( userId: number, mealSaveRequest: MealSaveRequest) :Observable<Meal>{
+    let headers: Headers = this.userService.getAuthHeader();
+    return this.http.put(`${this.baseUrl}/users/${userId}/meals/${mealSaveRequest.id}`, mealSaveRequest.toRequestJson() ,
+    {headers : headers}).map(res => {
+          return new Meal(res.json());
+      });
+  }
+
+  public createMeal( userId: number, mealSaveRequest: MealSaveRequest) :Observable<Meal>{
+    let headers: Headers = this.userService.getAuthHeader();
+    return this.http.post(`${this.baseUrl}/users/${userId}/meals`, mealSaveRequest.toRequestJson() ,
+    {headers : headers}).map(res => {
+          return new Meal(res.json());
+      });
   }
 
 }

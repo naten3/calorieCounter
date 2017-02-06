@@ -1,22 +1,22 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router'
 import { ModalModule } from 'ng2-bootstrap/modal';
 
 import { AppComponent } from './app.component';
-import { LoginComponent, HomeComponent, MealItemComponent, AddUpdateMealComponent } from './components';
-import { AuthGuard } from './guards';
+import { LoginComponent, HomeComponent, MealItemComponent, AddUpdateMealComponent, NotFoundComponent } from './components';
+import { AuthGuard, LoginGuard } from './guards';
 import { UserService, MealService } from './services';
 import { UserHomeResolve } from './resolves';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: 'user/:userId/meals', pathMatch: 'full', canActivate: [AuthGuard]},
   { path: 'user/:userId/meals', component: HomeComponent, canActivate: [AuthGuard],
     resolve: { meals: UserHomeResolve }
   },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
@@ -25,16 +25,18 @@ const appRoutes: Routes = [
     LoginComponent,
     HomeComponent,
     MealItemComponent,
-    AddUpdateMealComponent
+    AddUpdateMealComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
     ModalModule.forRoot()
   ],
-  providers: [AuthGuard, UserHomeResolve, UserService, MealService],
+  providers: [LoginGuard, AuthGuard, UserHomeResolve, UserService, MealService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

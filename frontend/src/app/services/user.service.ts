@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 import { User } from '../models'
 
 @Injectable()
-export class UserService implements OnInit{
+export class UserService {
   private USER_LOCAL_KEY: string = "USER";
   private X_AUTH_HEADER: string = "x-auth-token";
   private baseUrl :string = "/api";
@@ -19,27 +19,37 @@ export class UserService implements OnInit{
 
   constructor(private http: Http, private router: Router) { }
 
-  ngOnInit() {
-    this.checkLoggedIn();
-  }
-
-  checkLoggedIn() {
+  checkMemoryLoggedInObservable() :Observable<User>{
     let user: User = this.loginSubject.value;
     if (user == null) {
       let storageUser  = JSON.parse(localStorage.getItem(this.USER_LOCAL_KEY));
       if (storageUser != null) {
-        this.checkValidSession(storageUser).subscribe(sessionValid => {
+        return this.checkValidSession(storageUser).map(sessionValid => {
           if (sessionValid) {
             this.loginSubject.next(storageUser);
+            return storageUser;
+          } else {
+            return null;
           }
         });
       }
+      else {
+        return Observable.of(null);
+      }
+    } else {
+      return Observable.of(user);
     }
   }
 
   private checkValidSession(user: User) :Observable<boolean>{
-    return this.http.get(`${this.baseUrl}/login-health` ,{ headers : this.authHeaders(user) })
-    .map(res => res.status == 200);
+    return this.http.get(`${this.baseUrl}/session-health` ,{ headers : this.authHeaders(user) })
+    .map(res => res.status == 200).catch( error => {
+      if (error.status === 401) {
+        return Observable.of(false);
+      } else {
+        return Observable.throw(error);
+      }
+    });;
   }
 
   login(username: string, password: string) :Observable<User> {
@@ -84,7 +94,7 @@ export class UserService implements OnInit{
 
   private authHeaders(user: User) :Headers {
     let headers = new Headers();
-    headers.append(this.X_AUTH_HEADER, user.getToken());
+    headers.append(this.X_AUTH_HEADER, user.token);
     return headers;
   }
 
