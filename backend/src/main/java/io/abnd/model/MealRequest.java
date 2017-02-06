@@ -7,6 +7,8 @@ public class MealRequest {
   private int calorieValue;
   private String description;
 
+  public MealRequest(){}
+
   public MealRequest(final LocalDateTime mealTime,
                      final int calorieValue, final String description) {
 

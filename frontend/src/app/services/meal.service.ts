@@ -31,7 +31,8 @@ export class MealService implements OnInit {
 
   public updateMeal( userId: number, mealSaveRequest: MealSaveRequest) :Observable<Meal>{
     let headers: Headers = this.userService.getAuthHeader();
-    return this.http.put(`${this.baseUrl}/users/${userId}/meals/${mealSaveRequest.id}`, mealSaveRequest.toRequestJson() ,
+    let body: any = mealSaveRequest.toRequestJson();
+    return this.http.put(`${this.baseUrl}/users/${userId}/meals/${mealSaveRequest.id}`, body ,
     {headers : headers}).map(res => {
           return new Meal(res.json());
       });
@@ -39,7 +40,8 @@ export class MealService implements OnInit {
 
   public createMeal( userId: number, mealSaveRequest: MealSaveRequest) :Observable<Meal>{
     let headers: Headers = this.userService.getAuthHeader();
-    return this.http.post(`${this.baseUrl}/users/${userId}/meals`, mealSaveRequest.toRequestJson() ,
+    let body: any = mealSaveRequest.toRequestJson();
+    return this.http.post(`${this.baseUrl}/users/${userId}/meals`, body ,
     {headers : headers}).map(res => {
           return new Meal(res.json());
       });
