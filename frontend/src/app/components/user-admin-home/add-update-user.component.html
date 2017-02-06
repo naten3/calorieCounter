@@ -1,0 +1,45 @@
+<div class="modal fade" bsModal #addUpdateModal="bs-modal" [config]="{backdrop: 'static'}"
+   tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{modalTitle}}</h4>
+     <button type="button" class="close pull-right" aria-label="Close" (click)="addUpdateModal.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+    <form name="form" [formGroup]="mealForm" (ngSubmit)="save(mealForm.value, mealForm.valid)">
+        <div class="form-group" [ngClass]="{ 'has-error': submitted && !mealForm.controls.description.valid }">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" name="description" [maxLength]="500"
+            formControlName="description"/>
+            <div *ngIf="submitted && !mealForm.controls.description.valid" class="help-block">Description is required</div>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': submitted && !mealForm.controls.calorieValue.valid }">
+            <label for="calorieValue">Calorie Count</label>
+            <input type="number" class="form-control" name="calorieValue" formControlName="calorieValue"/>
+            <div *ngIf="submitted && !mealForm.controls.calorieValue.valid" class="help-block">
+              Calorie count must be a positive integer less than 10000
+            </div>
+        </div>
+        <div class="form-group" [ngClass]="{ 'has-error': submitted && !mealForm.controls.mealTime.valid }">
+            <label for="mealTime">Meal Time</label>
+            <input type="datetime-local" class="form-control" name="mealTime" formControlName="mealTime"/>
+            <div *ngIf="submitted && !mealForm.controls.mealTime.valid" class="help-block">
+              Meal time is required
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="control-group info">
+              <div class="controls">
+                 <button [disabled]="loading" class="btn btn-primary">Save Meal</button>
+                 <img *ngIf="loading" src="/assets/loading.gif">
+              </div>
+            </div>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+</div>

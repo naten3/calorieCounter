@@ -4,6 +4,8 @@ import io.abnd.model.UserResponse;
 import io.abnd.repository.UserRepository;
 import io.abnd.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,10 +36,14 @@ public class UserServiceImpl implements UserService {
     return Optional.ofNullable(userRepository.findOne(id)).map(this::convertToUserResponse);
   }
 
+  @Override public Page<UserResponse> getAllUsers(final Pageable pageable) {
+    return userRepository.findAll(pageable).map(user -> convertToUserResponse(user));
+  }
+
   private UserResponse convertToUserResponse(User user) {
     Set<String> roles = user.getRoles().stream()
     .map(role -> role.getRoleName())
     .collect(Collectors.toSet());
-    return new UserResponse(user.getId(), user.getUsername(), roles);
+    return new UserResponse(user.getId(), user.getUsername(), user.getDesiredCalories(), roles);
   }
 }

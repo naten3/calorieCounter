@@ -6,14 +6,16 @@ import { RouterModule, Routes } from '@angular/router'
 import { ModalModule } from 'ng2-bootstrap/modal';
 
 import { AppComponent } from './app.component';
-import { LoginComponent, HomeComponent, MealItemComponent, AddUpdateMealComponent, NotFoundComponent } from './components';
+import { LoginComponent, HomeComponent, UserAdminHomeComponent, MealItemComponent, AddUpdateMealComponent, NotFoundComponent } from './components';
 import { AuthGuard, LoginGuard } from './guards';
-import { UserService, MealService } from './services';
-import { UserHomeResolve } from './resolves';
+import { UserService, UserCrudService, MealService } from './services';
+import { UserHomeResolve, AdminHomeResolve } from './resolves';
 
 const appRoutes: Routes = [
   { path: 'user/:userId/meals', component: HomeComponent, canActivate: [AuthGuard],
     resolve: { meals: UserHomeResolve }
+  }, { path: 'admin/all-users', component: UserAdminHomeComponent, canActivate: [AuthGuard],
+    resolve: { users: AdminHomeResolve }
   },
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: '**', component: NotFoundComponent }
@@ -26,7 +28,8 @@ const appRoutes: Routes = [
     HomeComponent,
     MealItemComponent,
     AddUpdateMealComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    UserAdminHomeComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ModalModule.forRoot()
   ],
-  providers: [LoginGuard, AuthGuard, UserHomeResolve, UserService, MealService],
+  providers: [LoginGuard, AuthGuard, UserHomeResolve, AdminHomeResolve,
+     UserService, MealService, UserCrudService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

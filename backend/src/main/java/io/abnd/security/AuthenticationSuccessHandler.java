@@ -49,7 +49,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     CustomSpringUser user = ((CustomSpringUser) authentication.getPrincipal());
     Set<String> roles = user.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toSet());
-    UserResponse ur = new UserResponse(user.getId(), user.getUsername(), roles);
+    UserResponse ur = new UserResponse(user.getId(), user.getUsername(), user.getDesiredCalories(), roles);
     response.getWriter().write(jacksonObjectMapper.writeValueAsString(ur));
 
     if (savedRequest == null) {

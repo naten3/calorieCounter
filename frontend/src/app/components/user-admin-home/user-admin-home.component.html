@@ -1,0 +1,25 @@
+<div class="container">
+
+<div class="btn-toolbar">
+  <div class="btn-group col-md-offset-3" role="group">
+    <button [disabled]="loadingPage || !hasPreviousPage()" (click)="previousPage()"
+    class="btn btn-secondary" style="font-size=3em">←</button>
+    <div class="btn btn-secondary">Page {{getPage()}} of {{userPage.totalPages}}</div>
+    <button [disabled]="loadingPage || !hasNextPage()" (click)="nextPage()"
+    class="btn btn-secondary" style="font-size=3em">→</button>
+  </div>
+  <img *ngIf="loadingPage"
+  [style.visibility]="loadingPage ? 'visible' : 'hidden'"
+  src="/assets/loading.gif">
+
+  <div class="btn-group col-md-offset-3" role="group">
+    <button (click)="createUserModal()" class="btn btn-secondary" style="font-size=3em">Create New</button>
+  </div>
+</div>
+
+<div *ngFor="let use of userPage.items;">
+  <cc-user-item [user]=user (updateUser)="updateUserModal($event)" class="col-md-offset-3"></cc-user-item>
+</div>
+
+<!--cc-add-update-user-modal (userSave)="handleSaveRequest($event)" #addUpdateUser></cc-add-update-user-modal-->
+</div>

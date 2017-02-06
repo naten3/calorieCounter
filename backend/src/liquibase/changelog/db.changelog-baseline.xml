@@ -12,6 +12,7 @@
             <column name="PASSWORD" type="varchar(60)">
                 <constraints nullable="false"/>
             </column>
+            <column name="DESIRED_CALORIES" type="int"/>
         </createTable>
 
         <createTable tableName="ROLE">

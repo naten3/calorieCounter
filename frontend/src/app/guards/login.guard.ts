@@ -28,22 +28,22 @@ export class LoginGuard implements CanActivate, OnDestroy {
         if (user == null) {
           return true
         }
-        this.routeToUserHome(user);
+        this.router.navigate([LoginGuard.getUserHome(user)]);
         return false;
       })
     }
   }
 
-  routeToUserHome(user: User) {
+  public static getUserHome(user: User) :string {
     for (let role of user.roles) {
       if (role == User.USER_ROLE) {
-        this.router.navigate([`user/${user.id}/meals`]);
-        return;
-      } else if (role == User.ADMIN_ROLE) {
-//TODO
+        return `users/${user.id}/meals`;
       } else if (role == User.USER_ADMIN_ROLE) {
-//TODO
+        return `admin/all-users`;
+      } else if (role == User.ADMIN_ROLE) {
+
       }
+      return '';
     }
   }
 

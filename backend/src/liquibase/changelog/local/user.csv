@@ -1,5 +1,5 @@
-USER_ID,USERNAME,PASSWORD
-1,nate,password
-2,admin,$2a$05$M/rSVs3lbg.fzK4JtRXqpuUQdPUgFLx1DetqA5CPOdcrIfZiTMC22
-3,useradmin,$2a$05$t2lfxns9.qkwn8RbD.vIgutU.WbD0dfrRVtx9vn60MgsFSNRtAT/C
-4,nate2,password
+USER_ID,USERNAME,PASSWORD,DESIRED_CALORIES
+1,nate,password,100
+2,admin,password2,null
+3,useradmin,password3,null
+4,nate2,password,null

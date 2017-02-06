@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,7 @@ public class User {
 
   private String username;
   private String password;
+  private Integer desiredCalories;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "USER_ROLE", joinColumns=@JoinColumn(name="USER_ID"),
@@ -48,6 +50,14 @@ public class User {
 
   public void setPassword(final String password) {
     this.password = password;
+  }
+
+  public Integer getDesiredCalories() {
+    return desiredCalories;
+  }
+
+  public void setDesiredCalories(final Integer desiredCalories) {
+    this.desiredCalories = desiredCalories;
   }
 
   public Set<UserRole> getRoles() {

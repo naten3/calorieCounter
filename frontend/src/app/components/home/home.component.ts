@@ -9,11 +9,11 @@ import { AddUpdateMealComponent } from './';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-  public static PAGE_SIZE: number = 2;
+  public static PAGE_SIZE: number = 4;
   page: number = 0;
   mealPage: PaginatedData;
   loadingPage: boolean = false;
-  mealSave: EventEmitter<MealSaveAction>;
+  userSave: EventEmitter<MealSaveAction>;
 
   @ViewChild('addUpdateMeal') addUpdateMealComponent: AddUpdateMealComponent;
 

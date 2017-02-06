@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { UserService } from '../../services';
+import { LoginGuard } from '../../guards';
 
 @Component({
     templateUrl: 'login.component.html'
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                     this.invalidLoginAttempt = user == null;
                     if ( user != null ) {
-                      this.router.navigate([`user/${user.id}/meals`]); //TODO make constnat template instead of this
+                      this.router.navigate([LoginGuard.getUserHome(user)]);
                     }
                 });
     }
