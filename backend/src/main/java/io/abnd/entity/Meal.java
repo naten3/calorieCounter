@@ -13,18 +13,18 @@ public class Meal {
   @Id
   @GeneratedValue
   @Column(name = "MEAL_ID")
-  private long id;
+  private Long id;
   @Column(updatable = false)
   private long userId;
   private LocalDateTime mealTime;
   private int calorieValue;
   private String description;
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(final long id) {
+  public void setId(final Long id) {
     this.id = id;
   }
 

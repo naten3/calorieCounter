@@ -50,21 +50,35 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  createMeal() {
-    let meal: Meal = new Meal();
-    meal.description = '';
-    meal.calorieValue = null;
+  createMealModal() {
     this.addUpdateMealComponent.showModal(new MealSaveRequest(), MealActionType.CREATE);
+  }
+
+  updateMealModal(m: Meal) {
+    let mealRequest: MealSaveRequest = new MealSaveRequest();
+    mealRequest.id = m.id;
+    mealRequest.description = m.description;
+    mealRequest.mealTime = m.mealTime;
+    mealRequest.calorieValue = m.calorieValue;
+
+    this.addUpdateMealComponent.showModal(mealRequest, MealActionType.UPDATE);
   }
 
   handleSaveRequest(m: MealSaveAction) {
     if (m.action == MealActionType.CREATE) {
       this.mealService.createMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
         this.addUpdateMealComponent.mealSaveSucceded();
+        this.updatePage(this.mealPage.number);
       });
     } else {
       this.mealService.updateMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
         this.addUpdateMealComponent.mealSaveSucceded();
+        for ( let i = 0; i < this.mealPage.items.length ; i++) {
+          if (this.mealPage.items[i].id == meal.id) {
+            this.mealPage.items[i] = meal;
+            break;
+          }
+        }
       });
     }
   }

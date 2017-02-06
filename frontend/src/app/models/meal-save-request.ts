@@ -19,7 +19,7 @@ export class MealSaveRequest {
 
   toRequestJson() :any{
     let req: any =  {
-    mealTime : this.mealTime.toUTCString(),
+    mealTime : this.mealTime.toISOString(),
     calorieValue : this.calorieValue,
     description : this.description}
     return req;

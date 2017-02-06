@@ -36,15 +36,15 @@ public class MealServiceImpl implements MealService {
   @Override
   public MealResponse createMeal(final long userId, final MealRequest mealRequest) {
     Meal meal = convertToMeal(userId, null, mealRequest);
-    mealRepository.save(meal);
-    return convertToResponse(meal);
+    Meal resultMeal = mealRepository.save(meal);
+    return convertToResponse(resultMeal);
   }
 
   @Override
   public MealResponse updateMeal(final long userId, final long mealId, final MealRequest mealRequest) {
     Meal meal = convertToMeal(userId, mealId, mealRequest);
-    mealRepository.save(meal);
-    return convertToResponse(meal);
+    Meal resultMeal = mealRepository.save(meal);
+    return convertToResponse(resultMeal);
   }
 
   private MealResponse convertToResponse(Meal meal) {
@@ -53,7 +53,7 @@ public class MealServiceImpl implements MealService {
 
   private Meal convertToMeal(final long userId, final Long mealId, MealRequest mealRequest) {
     Meal meal = new Meal();
-    meal.setId(userId);
+    meal.setId(mealId);
     meal.setUserId(userId);
     meal.setCalorieValue(mealRequest.getCalorieValue());
     meal.setDescription(mealRequest.getDescription());

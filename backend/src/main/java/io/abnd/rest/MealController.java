@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +44,8 @@ public class MealController {
   }
 
   @PutMapping("/users/{userId}/meals/{id}")
-  public @ResponseBody MealResponse getMeals(@AuthenticationPrincipal User principal, @PathVariable long userId, @PathVariable long id, MealRequest mealRequest)
+  public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal User principal, @PathVariable long userId,
+                                               @PathVariable long id, @RequestBody MealRequest mealRequest)
   throws UnauthorizedException {
     if (((CustomSpringUser) principal).getId() != userId) {
       throw new UnauthorizedException();
@@ -52,7 +54,8 @@ public class MealController {
   }
 
   @PostMapping("/users/{userId}/meals")
-  public @ResponseBody MealResponse getMeals(@AuthenticationPrincipal User principal, @PathVariable long userId, MealRequest mealRequest)
+  public @ResponseBody MealResponse createMeal(@AuthenticationPrincipal User principal,
+                                               @PathVariable long userId, @RequestBody MealRequest mealRequest)
   throws UnauthorizedException {
     if (((CustomSpringUser) principal).getId() != userId) {
       throw new UnauthorizedException();
