@@ -13,28 +13,20 @@ import java.util.Optional;
 public class CustomSpringUser extends User {
 
   private long id;
-  private Integer desiredCalories;
 
-  public CustomSpringUser(final String username, final String password, final Collection<? extends GrantedAuthority> authorities, long id
-  ,Integer desiredCalories) {
+  public CustomSpringUser(final String username, final String password, final Collection<? extends GrantedAuthority> authorities, long id) {
     super(username, password, authorities);
     this.id = id;
-    this.desiredCalories = desiredCalories;
   }
 
   public CustomSpringUser(final String username, final String password, final boolean enabled, final boolean accountNonExpired,
                           final boolean credentialsNonExpired, final boolean accountNonLocked,
-                          final Collection<? extends GrantedAuthority> authorities, long id, Integer desiredCalories) {
+                          final Collection<? extends GrantedAuthority> authorities, long id) {
     super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     this.id = id;
-    this.desiredCalories = desiredCalories;
   }
 
   public long getId() {
     return id;
-  }
-
-  public Integer getDesiredCalories() {
-    return desiredCalories;
   }
 }

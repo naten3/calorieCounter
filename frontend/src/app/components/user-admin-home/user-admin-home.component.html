@@ -17,9 +17,9 @@
   </div>
 </div>
 
-<div *ngFor="let use of userPage.items;">
+<div *ngFor="let user of userPage.items;">
   <cc-user-item [user]=user (updateUser)="updateUserModal($event)" class="col-md-offset-3"></cc-user-item>
 </div>
 
-<!--cc-add-update-user-modal (userSave)="handleSaveRequest($event)" #addUpdateUser></cc-add-update-user-modal-->
+<cc-add-update-user-modal (userSave)="handleSaveRequest($event)" #addUpdateUser></cc-add-update-user-modal>
 </div>

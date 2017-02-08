@@ -36,12 +36,11 @@ export class LoginGuard implements CanActivate, OnDestroy {
 
   public static getUserHome(user: User) :string {
     for (let role of user.roles) {
+      if (role == User.USER_ADMIN_ROLE || role == User.ADMIN_ROLE) {
+        return `admin/all-users`;
+      }
       if (role == User.USER_ROLE) {
         return `users/${user.id}/meals`;
-      } else if (role == User.USER_ADMIN_ROLE) {
-        return `admin/all-users`;
-      } else if (role == User.ADMIN_ROLE) {
-
       }
       return '';
     }

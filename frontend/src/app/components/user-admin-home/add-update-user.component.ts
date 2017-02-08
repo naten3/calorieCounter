@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy, EventEmitter, Output, ViewChild } from '@
 import { Subscription } from 'rxjs/Subscription'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MealSaveRequest } from '../../models';
-import { MealSaveAction, MealActionType } from '../../actions'
-import { DateUtils } from '../../common'
+import { UserSaveRequest } from '../../models';
+import { UserSaveAction, UserActionType } from '../../actions'
 
 @Component({
   selector: 'cc-add-update-user-modal',
@@ -12,84 +11,88 @@ import { DateUtils } from '../../common'
 })
 export class AddUpdateUserComponent implements OnInit{
 
-  mealRequest: MealSaveRequest;
+  @ViewChild('addUpdateModal') public addUpdateModal: ModalDirective;
+  @Output('userSave') public userSaveEmitter: EventEmitter<UserSaveAction>
+  = new EventEmitter<UserSaveAction>();
+
+  userRequest: UserSaveRequest;
+  modalTitle: string;
   loading: boolean;
-  mealForm: FormGroup;
+  userForm: FormGroup;
   submitted: boolean = false;
   success: boolean = false;
-
-  @ViewChild('addUpdateModal') public addUpdateModal: ModalDirective;
-  @Output('mealSave') public mealSaveEmitter: EventEmitter<MealSaveAction>
-  = new EventEmitter<MealSaveAction>();
-
-  modalTitle: string;
-  public mealSaveRequest: MealSaveRequest = new MealSaveRequest();
-  public actionType: MealActionType;
+  userSaveRequest: UserSaveRequest = new UserSaveRequest();
+  actionType: UserActionType;
+  saveRequest: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit() {
-    this.buildForm( new MealSaveRequest() );
+    this.buildForm( new UserSaveRequest(), UserActionType.CREATE );
   }
 
   save(value: any, valid: boolean) {
+    this.submitted = true;
     if (valid) {
       this.loading = true;
-      let request: MealSaveRequest = new MealSaveRequest();
-      request.id = this.mealSaveRequest.id;
-      request.description = value.description;
-      request.calorieValue = value.calorieValue;
-      request.mealTime = DateUtils.UTCFromLocalTimeString(value.mealTime);
+      let request: UserSaveRequest = new UserSaveRequest();
+      request.id = this.userSaveRequest.id;
+      request.email = value.email;
+      request.desiredCalories = value.desiredCalories;
+      if (this.actionType == UserActionType.CREATE) {
+        request.password = value.password;
+        request.username = value.username;
+      }
 
-      this.mealSaveEmitter.emit(new MealSaveAction(this.actionType, request));
+      this.userSaveEmitter.emit(new UserSaveAction(this.actionType, request));
     }
   }
 
-  public showModal(mealSaveRequest: MealSaveRequest, mealActionType: MealActionType) {
+  public showModal(userSaveRequest: UserSaveRequest, userActionType: UserActionType) {
     //reset modal
-    this.mealForm.reset();
+    this.userForm.reset();
     this.loading = false;
     this.submitted = false;
 
-    this.buildForm( mealSaveRequest );
+    this.buildForm( userSaveRequest, userActionType );
 
-    this.mealSaveRequest = mealSaveRequest;
-    this.actionType = mealActionType;
-    if ( this.actionType == MealActionType.UPDATE) {
-      this.modalTitle = "Update Meal"
+    this.userSaveRequest = userSaveRequest;
+    this.actionType = userActionType;
+    this.saveRequest = userActionType == UserActionType.CREATE;
+    if ( userActionType == UserActionType.UPDATE) {
+      this.modalTitle = "Update User"
     } else {
-      this.modalTitle = "Add New Meal"
+      this.modalTitle = "Create New User"
     }
     this.addUpdateModal.show()
   }
 
-  private buildForm( initialRequest: MealSaveRequest ) {
-    let initialDescription;
-    let initialCalorieValue;
-    let initialMealTime;
-    if (initialRequest.description == null) {
-      initialDescription = "";
+  private buildForm( initialRequest: UserSaveRequest, actionType: UserActionType ) {
+    let initialDesiredCalories;
+    let initialEmail;
+    if (initialRequest.desiredCalories == null) {
+      initialDesiredCalories = "";
     } else {
-      initialDescription = initialRequest.description;
+      initialDesiredCalories = initialRequest.desiredCalories;
     }
-    if (initialRequest.calorieValue == null) {
-      initialCalorieValue = "calorieValue";
+    if (initialRequest.email == null) {
+      initialEmail = "";
     } else {
-      initialCalorieValue = initialRequest.calorieValue;
+      initialEmail = initialRequest.email;
     }
-    if (initialRequest.mealTime == null) {
-      initialMealTime = "";
-    } else {
-      initialMealTime = DateUtils.getDateStringForFormInit(initialRequest.mealTime);
+    let builderGroup: any = {
+            desiredCalories: [initialDesiredCalories, [Validators.pattern('^[1-9]\\d{0,4}$')]],
+            email: [initialEmail, [Validators.required]]
+        }
+    if (UserActionType.CREATE == actionType) {
+      builderGroup.password  = ['', [Validators.compose([Validators.required, Validators.maxLength(100),
+         Validators.minLength(8)])]];
+      builderGroup.username  = ['', [Validators.compose([Validators.required, Validators.maxLength(100)])]];
     }
-    this.mealForm = this.formBuilder.group({
-            description: [initialDescription, [Validators.required]],
-            calorieValue: [initialCalorieValue, [Validators.compose([Validators.required, Validators.pattern('^[1-9]\\d{0,4}$')])]],
-            mealTime: [initialMealTime, [Validators.required]]
-        });
+    this.userForm = this.formBuilder.group(builderGroup);
   }
 
-  public mealSaveSucceded() {
+  public userSaveSucceded() {
     this.loading = false;
     this.modalTitle = "Success!"
     setTimeout(()=>{ this.addUpdateModal.hide() }, 500)

@@ -1,6 +1,8 @@
 package io.abnd.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.abnd.entity.User;
+import io.abnd.exception.UnauthorizedException;
 import io.abnd.model.UserResponse;
 import io.abnd.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +50,9 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
     //Add user info to response
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     CustomSpringUser user = ((CustomSpringUser) authentication.getPrincipal());
-    Set<String> roles = user.getAuthorities().stream().map(auth -> auth.getAuthority()).collect(Collectors.toSet());
-    UserResponse ur = new UserResponse(user.getId(), user.getUsername(), user.getDesiredCalories(), roles);
-    response.getWriter().write(jacksonObjectMapper.writeValueAsString(ur));
+
+    UserResponse userResponse = userService.getUser(user.getId()).orElseThrow(ServletException::new);
+    response.getWriter().write(jacksonObjectMapper.writeValueAsString(userResponse));
 
     if (savedRequest == null) {
       clearAuthenticationAttributes(request);

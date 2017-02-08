@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
-import { User, PaginatedData } from '../models'
+import { User, PaginatedData, UserSaveRequest, UserUpdateRequest, UserCreateRequest } from '../models'
 import { HttpUtils } from '../common'
 
 @Injectable()
@@ -28,8 +28,22 @@ export class UserCrudService {
       //TODO error handling
   }
 
-  searchByUsername() {
+  public updateUser( userUpdateRequest: UserUpdateRequest) :Observable<User>{
+    let headers: Headers = this.userService.getAuthHeader();
+    let body: any = userUpdateRequest.toRequestJson();
+    return this.http.put(`${this.baseUrl}/admin/users/${userUpdateRequest.id}`, body ,
+    {headers : headers}).map(res => {
+          return new User(res.json());
+      });
+  }
 
+  public createUser( userCreateRequest: UserCreateRequest) :Observable<User>{
+    let headers: Headers = this.userService.getAuthHeader();
+    let body: any = userCreateRequest.toRequestJson();
+    return this.http.post(`${this.baseUrl}/admin/users/`, body ,
+    {headers : headers}).map(res => {
+          return new User(res.json());
+      });
   }
 
 }

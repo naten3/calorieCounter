@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserCrudService, UserService } from '../../services';
-import { User, PaginatedData, MealSaveRequest } from '../../models';
+import { User, PaginatedData, UserSaveRequest, UserCreateRequest, UserUpdateRequest } from '../../models';
 import { UserSaveAction, UserActionType } from '../../actions';
 import { AddUpdateUserComponent } from './';
 
@@ -15,7 +15,7 @@ export class UserAdminHomeComponent implements OnInit {
   loadingPage: boolean = false;
   userSave: EventEmitter<UserSaveAction>;
 
-//@ViewChild('addUpdateUser') addUpdateMealComponent: AddUpdateUserComponent;
+@ViewChild('addUpdateUser') addUpdateUserComponent: AddUpdateUserComponent;
 
   constructor(private route: ActivatedRoute, private userCrudService: UserCrudService,
      private userService: UserService) {}
@@ -51,7 +51,7 @@ export class UserAdminHomeComponent implements OnInit {
   }
 
   createUserModal() {
-    //this.addUpdateMealComponent.showModal(new MealSaveRequest(), MealActionType.CREATE);
+    this.addUpdateUserComponent.showModal(new UserSaveRequest(), UserActionType.CREATE);
   }
 
   updateUserModal(u: User) {
@@ -65,22 +65,24 @@ export class UserAdminHomeComponent implements OnInit {
   }
 
   handleSaveRequest(u: UserSaveAction) {
-    /*if (m.action == MealActionType.CREATE) {
-      this.mealService.createMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
-        this.addUpdateMealComponent.mealSaveSucceded();
-        this.updatePage(this.mealPage.number);
+    if (u.action == UserActionType.CREATE) {
+      let userCreateRequest :UserCreateRequest = new UserCreateRequest(u.userSaveRequest);
+      this.userCrudService.createUser(userCreateRequest).subscribe( user => {
+        this.addUpdateUserComponent.userSaveSucceded();
+        this.updatePage(this.userPage.number);
       });
     } else {
-      this.mealService.updateMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
-        this.addUpdateMealComponent.mealSaveSucceded();
-        for ( let i = 0; i < this.mealPage.items.length ; i++) {
-          if (this.mealPage.items[i].id == meal.id) {
-            this.mealPage.items[i] = meal;
+      let userCreateRequest :UserUpdateRequest = new UserUpdateRequest(u.userSaveRequest);
+      this.userCrudService.updateUser(userCreateRequest).subscribe( user => {
+        this.addUpdateUserComponent.userSaveSucceded();
+        for ( let i = 0; i < this.userPage.items.length ; i++) {
+          if (this.userPage.items[i].id == user.id) {
+            this.userPage.items[i] = user;
             break;
           }
         }
       });
-    }*/ return new UserSaveAction(null, null);
+    }
   }
 
 }

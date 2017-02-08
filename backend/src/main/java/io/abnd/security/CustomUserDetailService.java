@@ -30,11 +30,11 @@ class CustomUserDetailService implements UserDetailsService {
     boolean credentialsNonExpired = true;
     boolean accountNonLocked = true;
 
-    return userService.getUser(username).map(user -> {
+    return userService.getSecurityUser(username).map(user -> {
       return new CustomSpringUser
       (user.getUsername(),
       user.getPassword(), enabled, accountNonExpired,
-      credentialsNonExpired, accountNonLocked, getAuthorities(user.getRoles()), user.getId(), user.getDesiredCalories());
+      credentialsNonExpired, accountNonLocked, getAuthorities(user.getRoles()), user.getId());
     }).orElseThrow(() -> new UsernameNotFoundException(
     "No user found with username: " + username));
   }

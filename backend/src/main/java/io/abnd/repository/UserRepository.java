@@ -1,6 +1,8 @@
 package io.abnd.repository;
 
 import io.abnd.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   + "from User u where u.username = :username")
   public boolean doesUserExist(String username);
 
-  //TODO remove
-  @Query("select count(u) from User u")
-  public int getCount();
+  @Query("select u FROM User AS u JOIN u.roles AS r WHERE r.roleName = ?1")
+  public Page<User> findAllByRole(String roleName, Pageable pageable);
 }

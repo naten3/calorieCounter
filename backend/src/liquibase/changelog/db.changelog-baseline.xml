@@ -9,7 +9,10 @@
             <column name="USERNAME" type="nvarchar(100)">
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="PASSWORD" type="varchar(60)">
+            <column name="PASSWORD" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="varchar(300)">
                 <constraints nullable="false"/>
             </column>
             <column name="DESIRED_CALORIES" type="int"/>

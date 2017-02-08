@@ -6,7 +6,8 @@ import { RouterModule, Routes } from '@angular/router'
 import { ModalModule } from 'ng2-bootstrap/modal';
 
 import { AppComponent } from './app.component';
-import { LoginComponent, HomeComponent, UserAdminHomeComponent, MealItemComponent, AddUpdateMealComponent, NotFoundComponent } from './components';
+import { LoginComponent, HomeComponent, UserAdminHomeComponent, UserItemComponent,
+   MealItemComponent, AddUpdateMealComponent, NotFoundComponent, AddUpdateUserComponent } from './components';
 import { AuthGuard, LoginGuard } from './guards';
 import { UserService, UserCrudService, MealService } from './services';
 import { UserHomeResolve, AdminHomeResolve } from './resolves';
@@ -29,7 +30,9 @@ const appRoutes: Routes = [
     MealItemComponent,
     AddUpdateMealComponent,
     NotFoundComponent,
-    UserAdminHomeComponent
+    UserAdminHomeComponent,
+    UserItemComponent,
+    AddUpdateUserComponent
   ],
   imports: [
     BrowserModule,

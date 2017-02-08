@@ -63,7 +63,8 @@ export class UserService {
       headers : headers }).map(res => {
         if (res.status == 200) {
           let token: string = res.headers.get(this.X_AUTH_HEADER);
-          let responseUser: User = new User(res.json().id, res.json().username, res.json().roles, token);
+          let responseUser: User = new User(res.json());
+          responseUser.token = token;
           localStorage.setItem( this.USER_LOCAL_KEY, JSON.stringify(responseUser));
           this.loginSubject.next(responseUser);
           return responseUser;

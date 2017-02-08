@@ -1,5 +1,6 @@
 package io.abnd.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,15 +20,17 @@ public class User {
   @Column(name = "USER_ID")
   private long id;
 
+  @Column(updatable = false)
   private String username;
+
   private String password;
   private Integer desiredCalories;
+  private String email;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "USER_ROLE", joinColumns=@JoinColumn(name="USER_ID"),
   inverseJoinColumns=@JoinColumn(name="ROLE_ID"))
-
-  private Set<UserRole> roles;
+  private Set<UserRole> roles = new HashSet<>();
 
   public long getId() {
     return id;
@@ -58,6 +62,14 @@ public class User {
 
   public void setDesiredCalories(final Integer desiredCalories) {
     this.desiredCalories = desiredCalories;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(final String email) {
+    this.email = email;
   }
 
   public Set<UserRole> getRoles() {
