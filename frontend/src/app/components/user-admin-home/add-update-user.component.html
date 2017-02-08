@@ -12,9 +12,12 @@
     <form *ngIf="saveRequest" name="form" [formGroup]="userForm" (ngSubmit)="save(userForm.value, userForm.valid)">
       <div *ngIf="saveRequest" class="form-group" [ngClass]="{ 'has-error': submitted && !userForm.controls.username.valid }">
         <label for="username">Username</label>
-        <input type="text" class="form-control" name="username" formControlName="username" />
-        <div *ngIf="submitted && !userForm.controls.password.valid" class="help-block">
+        <input type="text" (focusout)="checkUsernameAvailable(userForm.value.username)" class="form-control" name="username" formControlName="username" />
+        <div *ngIf="submitted && !userForm.controls.username.valid" class="help-block">
           Username is required and must be less than 100 characters
+        </div>
+        <div *ngIf="usernameEntered && !usernameAvailable" class="help-block">
+          Username is already used!
         </div>
       </div>
       <div *ngIf="saveRequest" class="form-group" [ngClass]="{ 'has-error': submitted && !userForm.controls.password.valid }">
@@ -26,9 +29,12 @@
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': submitted && !userForm.controls.email.valid }">
           <label for="email">Email</label>
-          <input type="email" class="form-control" name="email" formControlName="email" [maxLength]="300"/>
+          <input type="email" (focusout)="checkEmailAvailable(userForm.value.email)"  class="form-control" name="email" formControlName="email" [maxLength]="300"/>
           <div *ngIf="submitted && !userForm.controls.email.valid" class="help-block">
             Email is required
+          </div>
+          <div *ngIf="emailEntered && !emailAvailable" class="help-block">
+            Email is already used!
           </div>
       </div>
       <div class="form-group" [ngClass]="{ 'has-error': submitted && !userForm.controls.desiredCalories.valid }">

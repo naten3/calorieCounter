@@ -13,7 +13,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="EMAIL" type="varchar(300)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="DESIRED_CALORIES" type="int"/>
         </createTable>

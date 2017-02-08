@@ -59,6 +59,16 @@ public class UserServiceImpl implements UserService {
     }).orElseThrow(ResourceNotFoundException::new);
   }
 
+  @Override
+  public boolean isUsernameAvailable(String username) {
+    return userRepository.usernameCount(username) == 0;
+  }
+
+  @Override
+  public boolean isEmailAvailable(String email) {
+    return userRepository.emailCount(email) == 0;
+  }
+
   private UserResponse convertToUserResponse(User user) {
     Set<String> roles = user.getRoles().stream()
     .map(role -> role.getRoleName())

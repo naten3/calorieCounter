@@ -21,4 +21,8 @@ public interface UserService {
   public UserResponse createUser(UserCreateRequest ucr);
 
   public UserResponse updateUser(long userId, UserUpdateRequest uur) throws ResourceNotFoundException;
+
+  boolean isUsernameAvailable(String username);
+
+  boolean isEmailAvailable(String email);
 }

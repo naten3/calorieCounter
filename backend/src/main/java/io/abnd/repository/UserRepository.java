@@ -19,4 +19,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @Query("select u FROM User AS u JOIN u.roles AS r WHERE r.roleName = ?1")
   public Page<User> findAllByRole(String roleName, Pageable pageable);
+
+  @Query("select count(u) FROM User u where u.username = ?1")
+  public int usernameCount(String username);
+
+  @Query("select count(u) FROM User u where u.email = ?1")
+  public int emailCount(String email);
 }

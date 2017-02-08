@@ -3,6 +3,7 @@ package io.abnd.rest;
 import io.abnd.entity.UserRole;
 import io.abnd.exception.ResourceNotFoundException;
 import io.abnd.exception.UnauthorizedException;
+import io.abnd.model.BooleanWrapper;
 import io.abnd.model.UserCreateRequest;
 import io.abnd.model.UserUpdateRequest;
 import io.abnd.model.UserResponse;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,14 @@ public class UserController {
 
   @GetMapping("/session-health")
   public void checkLogin(@AuthenticationPrincipal User user){}
+
+  @GetMapping("users/available")
+  BooleanWrapper isUserInfoAvailable(@RequestParam(value="username", required=false) String username,
+                                     @RequestParam(value="email", required=false) String email) {
+    boolean usernameAvailable = username == null ? true : userService.isUsernameAvailable(username);
+    boolean passwordAvailable = email == null ? true : userService.isEmailAvailable(email);
+    return new BooleanWrapper( usernameAvailable && passwordAvailable );
+  }
 
   @GetMapping("/admin/users")
   public Page<UserResponse> getAllNonadminUsers(@AuthenticationPrincipal CustomSpringUser user, Pageable pageable) throws UnauthorizedException{

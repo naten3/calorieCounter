@@ -44,11 +44,7 @@ export class UserService {
   private checkValidSession(user: User) :Observable<boolean>{
     return this.http.get(`${this.baseUrl}/session-health` ,{ headers : this.authHeaders(user) })
     .map(res => res.status == 200).catch( error => {
-      if (error.status === 401) {
-        return Observable.of(false);
-      } else {
-        return Observable.throw(error);
-      }
+      return Observable.of(false);
     });;
   }
 
