@@ -8,7 +8,7 @@ import { ModalModule } from 'ng2-bootstrap/modal';
 import { AppComponent } from './app.component';
 import { LoginComponent, HomeComponent, UserAdminHomeComponent, UserItemComponent,
    MealItemComponent, AddUpdateMealComponent, NotFoundComponent, AddUpdateUserComponent } from './components';
-import { AuthGuard, LoginGuard } from './guards';
+import { AuthGuard, LoginGuard, NotFoundGuard } from './guards';
 import { UserService, UserCrudService, MealService } from './services';
 import { UserHomeResolve, AdminHomeResolve } from './resolves';
 
@@ -19,7 +19,7 @@ const appRoutes: Routes = [
     resolve: { users: AdminHomeResolve }
   },
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent , canActivate: [NotFoundGuard]}
 ];
 
 @NgModule({
@@ -42,7 +42,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ModalModule.forRoot()
   ],
-  providers: [LoginGuard, AuthGuard, UserHomeResolve, AdminHomeResolve,
+  providers: [LoginGuard, AuthGuard, NotFoundGuard, UserHomeResolve, AdminHomeResolve,
      UserService, MealService, UserCrudService],
   bootstrap: [AppComponent]
 })
