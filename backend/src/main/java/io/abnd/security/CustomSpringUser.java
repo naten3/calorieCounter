@@ -26,6 +26,10 @@ public class CustomSpringUser extends User {
     this.id = id;
   }
 
+  public boolean hasAuthority(String s) {
+    return getAuthorities().stream().map(a -> a.getAuthority()).filter(auth -> auth.equals(s)).findFirst().isPresent();
+  }
+
   public long getId() {
     return id;
   }

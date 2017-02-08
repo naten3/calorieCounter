@@ -21,4 +21,13 @@ export class User {
     this.desiredCalories = o.desiredCalories;
     this.email = o.email;
   }
+
+  public hasRole(role: String) {
+    for (let r of this.roles) {
+      if(r == role) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

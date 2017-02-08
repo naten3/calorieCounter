@@ -55,13 +55,11 @@ export class UserAdminHomeComponent implements OnInit {
   }
 
   updateUserModal(u: User) {
-    //let mealRequest: MealSaveRequest = new MealSaveRequest();
-    //mealRequest.id = m.id;
-    //mealRequest.description = m.description;
-    //mealRequest.mealTime = m.mealTime;
-    //mealRequest.calorieValue = m.calorieValue;
-
-    //this.addUpdateMealComponent.showModal(mealRequest, MealActionType.UPDATE);
+    let userSaveRequest: UserSaveRequest = new UserSaveRequest();
+    userSaveRequest.id = u.id;
+    userSaveRequest.email = u.email;
+    userSaveRequest.desiredCalories = u.desiredCalories;
+    this.addUpdateUserComponent.showModal(userSaveRequest, UserActionType.UPDATE);
   }
 
   handleSaveRequest(u: UserSaveAction) {

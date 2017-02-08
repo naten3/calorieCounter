@@ -40,7 +40,7 @@ export class LoginGuard implements CanActivate, OnDestroy {
         return `admin/all-users`;
       }
       if (role == User.USER_ROLE) {
-        return `users/${user.id}/meals`;
+        return `user/${user.id}/meals`;
       }
       return '';
     }

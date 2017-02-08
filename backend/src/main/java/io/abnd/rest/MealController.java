@@ -1,5 +1,6 @@
 package io.abnd.rest;
 
+import io.abnd.entity.UserRole;
 import io.abnd.exception.UnauthorizedException;
 import io.abnd.model.MealRequest;
 import io.abnd.model.MealResponse;
@@ -35,29 +36,29 @@ public class MealController {
   private MealService mealService;
 
   @GetMapping("/users/{userId}/meals")
-  public @ResponseBody Page<MealResponse> getMeals(@AuthenticationPrincipal User principal, @PathVariable long userId, Pageable pageable)
+  public @ResponseBody Page<MealResponse> getMeals(@AuthenticationPrincipal CustomSpringUser principal, @PathVariable long userId, Pageable pageable)
   throws UnauthorizedException {
-    if (((CustomSpringUser) principal).getId() != userId) {
+    if ((principal).getId() != userId && !principal.hasAuthority(UserRole.USER_ADMIN)) {
       throw new UnauthorizedException();
     }
     return mealService.findByUserId(userId, pageable);
   }
 
   @PutMapping("/users/{userId}/meals/{id}")
-  public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal User principal, @PathVariable long userId,
+  public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal CustomSpringUser principal, @PathVariable long userId,
                                                @PathVariable long id, @RequestBody MealRequest mealRequest)
   throws UnauthorizedException {
-    if (((CustomSpringUser) principal).getId() != userId) {
+    if ((principal).getId() != userId && !principal.hasAuthority(UserRole.USER_ADMIN)) {
       throw new UnauthorizedException();
     }
     return mealService.updateMeal(userId, id, mealRequest);
   }
 
   @PostMapping("/users/{userId}/meals")
-  public @ResponseBody MealResponse createMeal(@AuthenticationPrincipal User principal,
+  public @ResponseBody MealResponse createMeal(@AuthenticationPrincipal CustomSpringUser principal,
                                                @PathVariable long userId, @RequestBody MealRequest mealRequest)
   throws UnauthorizedException {
-    if (((CustomSpringUser) principal).getId() != userId) {
+    if ((principal).getId() != userId && !principal.hasAuthority(UserRole.USER_ADMIN)) {
       throw new UnauthorizedException();
     }
     return mealService.createMeal(userId, mealRequest);

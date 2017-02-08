@@ -11,17 +11,18 @@ import { AddUpdateMealComponent } from './';
 export class HomeComponent implements OnInit {
   public static PAGE_SIZE: number = 4;
   page: number = 0;
+  userId: number;
   mealPage: PaginatedData;
   loadingPage: boolean = false;
   userSave: EventEmitter<MealSaveAction>;
 
   @ViewChild('addUpdateMeal') addUpdateMealComponent: AddUpdateMealComponent;
 
-  constructor(private route: ActivatedRoute, private mealService: MealService,
-     private userService: UserService) {}
+  constructor(private route: ActivatedRoute, private mealService: MealService) {}
 
   ngOnInit() {
     this.mealPage = this.route.snapshot.data['meals'];
+    this.userId = this.route.snapshot.params['userId'];
   }
 
   getPage(): number {
@@ -45,7 +46,7 @@ export class HomeComponent implements OnInit {
   }
 
   updatePage(newPage: number) {
-    this.mealService.getUserMeals(this.userService.getUser().id, newPage, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
+    this.mealService.getUserMeals(this.userId, newPage, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
       this.mealPage = mealPage;
     })
   }
@@ -66,12 +67,12 @@ export class HomeComponent implements OnInit {
 
   handleSaveRequest(m: MealSaveAction) {
     if (m.action == MealActionType.CREATE) {
-      this.mealService.createMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
+      this.mealService.createMeal(this.userId, m.mealSaveRequest).subscribe( meal => {
         this.addUpdateMealComponent.mealSaveSucceded();
         this.updatePage(this.mealPage.number);
       });
     } else {
-      this.mealService.updateMeal(this.userService.getUser().id, m.mealSaveRequest).subscribe( meal => {
+      this.mealService.updateMeal(this.userId, m.mealSaveRequest).subscribe( meal => {
         this.addUpdateMealComponent.mealSaveSucceded();
         for ( let i = 0; i < this.mealPage.items.length ; i++) {
           if (this.mealPage.items[i].id == meal.id) {
