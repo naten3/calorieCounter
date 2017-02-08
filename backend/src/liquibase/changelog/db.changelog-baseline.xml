@@ -19,9 +19,6 @@
         </createTable>
 
         <createTable tableName="ROLE">
-            <column autoIncrement="true" name="ROLE_ID" type="int">
-                <constraints primaryKey="true" primaryKeyName="PK_ROLE" />
-            </column>
             <column name="ROLE_NAME" type="nvarchar(100)">
                 <constraints nullable="false" unique="true" />
             </column>
@@ -34,11 +31,11 @@
             <column name="USER_ID" type="int">
                 <constraints nullable="false" references="USER(USER_ID)" foreignKeyName="FK_USER_ROLE_USER"/>
             </column>
-            <column name="ROLE_ID" type="int">
-                <constraints nullable="false" references="ROLE(ROLE_ID)" foreignKeyName="FK_USER_ROLE_ROLE"/>
+            <column name="ROLE_NAME" type="nvarchar(100)">
+                <constraints nullable="false" references="ROLE(ROLE_NAME)" foreignKeyName="FK_USER_ROLE_ROLE"/>
             </column>
         </createTable>
-        <addUniqueConstraint columnNames="USER_ID, ROLE_ID" tableName="USER_ROLE" />
+        <addUniqueConstraint columnNames="USER_ID, ROLE_NAME" tableName="USER_ROLE" />
 
         <createTable tableName="MEAL">
             <column autoIncrement="true" name="MEAL_ID" type="int">

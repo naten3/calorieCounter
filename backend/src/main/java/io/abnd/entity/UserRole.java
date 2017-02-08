@@ -23,22 +23,10 @@ public class UserRole {
   }
 
   @Id
-  @GeneratedValue
-  @Column(name = "ROLE_ID")
-  private Long id;
+  private String roleName;
 
   @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
   public Set<User> users;
-
-  private String roleName;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(final Long id) {
-    this.id = id;
-  }
 
   public String getRoleName() {
     return roleName;
@@ -46,5 +34,13 @@ public class UserRole {
 
   public void setRoleName(final String roleName) {
     this.roleName = roleName;
+  }
+
+  public Set<User> getUsers() {
+    return users;
+  }
+
+  public void setUsers(final Set<User> users) {
+    this.users = users;
   }
 }
