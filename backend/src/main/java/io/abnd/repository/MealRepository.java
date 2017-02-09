@@ -21,4 +21,6 @@ public interface MealRepository extends JpaRepository<Meal, Long> {
   Page<Meal> findByUserIdAndMealTimeBetween(@Param("userId") long userId, @Param("startDateTime") LocalDateTime startDateTime,
                                             @Param("endDateTime") LocalDateTime endDateTime,
                                             Pageable pageable);
+
+  public void deleteByUserId(long useId);
 }

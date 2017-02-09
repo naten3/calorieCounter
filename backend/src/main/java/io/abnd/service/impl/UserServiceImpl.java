@@ -6,6 +6,7 @@ import io.abnd.exception.ResourceNotFoundException;
 import io.abnd.model.UserCreateRequest;
 import io.abnd.model.UserResponse;
 import io.abnd.model.UserUpdateRequest;
+import io.abnd.repository.MealRepository;
 import io.abnd.repository.UserRepository;
 import io.abnd.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
   UserRepository userRepository;
+  MealRepository mealRepository;
 
   @Autowired
-  public UserServiceImpl(final UserRepository userRepository) {
+  public UserServiceImpl(final UserRepository userRepository, final MealRepository mealRepository) {
     this.userRepository = userRepository;
+    this.mealRepository = mealRepository;
   }
 
   @Override
@@ -57,6 +60,11 @@ public class UserServiceImpl implements UserService {
       User newUser = mergeUser(originalUser, uur);
       return convertToUserResponse(userRepository.save(newUser));
     }).orElseThrow(ResourceNotFoundException::new);
+  }
+
+  @Override public void deleteUser(final long id) {
+    mealRepository.deleteByUserId(id);
+    userRepository.delete(id);
   }
 
   @Override

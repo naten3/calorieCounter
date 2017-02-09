@@ -29,7 +29,8 @@
                 <constraints primaryKey="true" primaryKeyName="PK_USER_ROLE" />
             </column>
             <column name="USER_ID" type="int">
-                <constraints nullable="false" references="USER(USER_ID)" foreignKeyName="FK_USER_ROLE_USER"/>
+                <!--TODO figuree out how to delete these orphans and readd FK-->
+                <constraints nullable="false" />
             </column>
             <column name="ROLE_NAME" type="nvarchar(100)">
                 <constraints nullable="false" references="ROLE(ROLE_NAME)" foreignKeyName="FK_USER_ROLE_ROLE"/>

@@ -1,5 +1,6 @@
 package io.abnd.rest;
 
+import io.abnd.entity.Meal;
 import io.abnd.entity.UserRole;
 import io.abnd.exception.ResourceNotFoundException;
 import io.abnd.exception.UnauthorizedException;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,7 +64,7 @@ public class UserController {
     return userService.createUser(userCreateRequest);
   }
 
-  @PutMapping("/admin/users/{id}")
+  @PutMapping("/users/{id}")
   public UserResponse updateUser(@AuthenticationPrincipal CustomSpringUser principal, @PathVariable long id,
                                  @RequestBody UserUpdateRequest userUpdateRequest)
   throws UnauthorizedException, ResourceNotFoundException{
@@ -72,4 +74,16 @@ public class UserController {
     }
     return userService.updateUser(id, userUpdateRequest);
   }
+
+  @DeleteMapping("/users/{id}")
+  public void deleteMeal(@AuthenticationPrincipal CustomSpringUser principal,
+                         @PathVariable long id)
+  throws UnauthorizedException, ResourceNotFoundException{
+    UserResponse user = userService.getUser(id).orElseThrow(ResourceNotFoundException::new);
+    if ((principal).getId() != user.getId() && !principal.hasAuthority(UserRole.USER_ADMIN)) {
+      throw new UnauthorizedException();
+    }
+    userService.deleteUser(id);
+  }
+
 }

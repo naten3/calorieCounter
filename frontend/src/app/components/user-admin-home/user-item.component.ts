@@ -17,6 +17,7 @@ import { User } from "../../models";
           <dd>{{user.desiredCalories}}</dd>
         </dl>
      <a (click)="updateUserRequest()" class="btn btn-primary">Edit</a>
+     <a (click)="deleteUser()" class="btn btn-primary">Delete</a>
      <a *ngIf="isUserAdmin()" (click)="navigateToUserPage()" class="btn btn-primary">Edit Meals</a>
     </div>
   </div>`,
@@ -28,9 +29,14 @@ export class UserItemComponent {
   @Output('updateUser') updateUserEmitter: EventEmitter<User> = new EventEmitter<User>();
 
   constructor(private userService: UserService, private router: Router) {}
+  @Output('deleteUser') deleteUserEmitter: EventEmitter<number> = new EventEmitter<number>();
 
-  updateUserRequest() {
+  private updateUserRequest() {
     this.updateUserEmitter.emit(this.user);
+  }
+
+  private  deleteUser() {
+    this.deleteUserEmitter.emit(this.user.id);
   }
 
   private isUserAdmin() :boolean {

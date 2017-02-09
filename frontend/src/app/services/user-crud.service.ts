@@ -31,7 +31,7 @@ export class UserCrudService {
   public updateUser( userUpdateRequest: UserUpdateRequest) :Observable<User>{
     let headers: Headers = this.userService.getAuthHeader();
     let body: any = userUpdateRequest.toRequestJson();
-    return this.http.put(`${this.baseUrl}/admin/users/${userUpdateRequest.id}`, body ,
+    return this.http.put(`${this.baseUrl}/users/${userUpdateRequest.id}`, body ,
     {headers : headers}).map(res => {
           return new User(res.json());
       });
@@ -42,6 +42,14 @@ export class UserCrudService {
     return this.http.post(`${this.baseUrl}/users/`, body ,
     {}).map(res => {
           return new User(res.json());
+      });
+  }
+
+  public deleteUser( userId: number) :Observable<boolean> {
+    let headers: Headers = this.userService.getAuthHeader();
+    return this.http.delete(`${this.baseUrl}/users/${userId}`,
+    {headers : headers}).map(res => {
+        return res.status == 200;
       });
   }
 

@@ -83,4 +83,13 @@ export class UserAdminHomeComponent implements OnInit {
     }
   }
 
+  private deleteUser(id: number) {
+    this.userCrudService.deleteUser(id).subscribe( a => {
+      if (this.userPage.items.length == 1 && !this.userPage.first) {
+        this.previousPage();
+      }
+      this.updatePage(this.userPage.number);
+    })
+  }
+
 }
