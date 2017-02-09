@@ -1,0 +1,27 @@
+<h5>Filter By Date Range</h5>
+<form name="form" [formGroup]="filterForm" (ngSubmit)="filter(filterForm.value, filterForm.valid)">
+    <div class="form-group" [ngClass]="{ 'has-error': submitted && !filterForm.controls.startTime.valid }">
+        <label for="startTime">Start Time</label>
+        <input type="datetime-local" class="form-control" name="startTime" formControlName="startTime"/>
+        <div *ngIf="submitted && !filterForm.controls.startTime.valid" class="help-block">
+          Start time is required
+        </div>
+    </div>
+    <div class="form-group" [ngClass]="{ 'has-error': submitted && !filterForm.controls.endTime.valid }">
+        <label for="endTime">End Time</label>
+        <input type="datetime-local" class="form-control" name="endTime" formControlName="endTime"/>
+        <div *ngIf="submitted && !filterForm.controls.endTime.valid" class="help-block">
+          End time is required
+        </div>
+        <div *ngIf="submitted && endBeforeStart" class="help-block">
+          Start time must be before end time
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="control-group info">
+          <div class="controls">
+             <button class="btn btn-primary">Filter</button>
+          </div>
+        </div>
+    </div>
+</form>

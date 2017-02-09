@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MealService, UserService } from '../../services';
-import { Meal, PaginatedData, MealSaveRequest } from '../../models';
+import { Meal, PaginatedData, MealSaveRequest, TimeRange } from '../../models';
 import { MealSaveAction, MealActionType } from '../../actions';
 import { AddUpdateMealComponent } from './';
 
@@ -10,7 +10,6 @@ import { AddUpdateMealComponent } from './';
 })
 export class HomeComponent implements OnInit {
   public static PAGE_SIZE: number = 4;
-  page: number = 0;
   userId: number;
   mealPage: PaginatedData;
   loadingPage: boolean = false;
@@ -27,14 +26,6 @@ export class HomeComponent implements OnInit {
 
   getPage(): number {
     return this.mealPage.number + 1;
-  }
-
-  hasNextPage() :boolean {
-    return this.mealPage.number < this.mealPage.totalPages - 1;
-  }
-
-  hasPreviousPage() :boolean {
-    return this.mealPage.number > 0;
   }
 
   nextPage() {
@@ -82,6 +73,12 @@ export class HomeComponent implements OnInit {
         }
       });
     }
+  }
+
+  public filterMeals(timeRange: TimeRange) {
+    this.mealService.getUserMealsInDateRange(this.userId, timeRange.startTime, timeRange.endTime, 0, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
+      this.mealPage = mealPage;
+    })
   }
 
 }

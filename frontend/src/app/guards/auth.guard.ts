@@ -8,6 +8,7 @@ import { UserService } from '../services';
 export class AuthGuard implements CanActivate, OnDestroy {
 
   private loggedIn: boolean;
+  private endBeforeStart: boolean = false;
   private loginSubscription: Subscription;
 
   constructor(private router: Router, private userService: UserService) {
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate, OnDestroy {
     } else {
       return this.userService.checkMemoryLoggedInObservable().map( user => {
         if (user == null) {
-          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
+          this.router.navigate(['/login']);
           return false
         }
         return true;

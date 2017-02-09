@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +47,11 @@ public class MealServiceImpl implements MealService {
     Meal meal = convertToMeal(userId, mealId, mealRequest);
     Meal resultMeal = mealRepository.save(meal);
     return convertToResponse(resultMeal);
+  }
+
+  @Override
+  public Page<MealResponse> findMealsInTimeRange(final long userId, final LocalDateTime startDateTime, final LocalDateTime endDateTime, final Pageable pageable) {
+    return mealRepository.findByUserIdAndMealTimeBetween(userId, startDateTime, endDateTime, pageable).map(this::convertToResponse);
   }
 
   private MealResponse convertToResponse(Meal meal) {

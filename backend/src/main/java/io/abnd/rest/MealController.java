@@ -4,30 +4,23 @@ import io.abnd.entity.UserRole;
 import io.abnd.exception.UnauthorizedException;
 import io.abnd.model.MealRequest;
 import io.abnd.model.MealResponse;
-import io.abnd.model.Message;
-import io.abnd.model.UserResponse;
 import io.abnd.security.CustomSpringUser;
 import io.abnd.service.intf.MealService;
-import io.abnd.service.intf.TestService;
-import io.abnd.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @RestController
 public class MealController {
@@ -43,6 +36,24 @@ public class MealController {
     }
     return mealService.findByUserId(userId, pageable);
   }
+
+  @GetMapping(value = "/users/{userId}/meals", params={"startTime","endTime"})
+  public @ResponseBody Page<MealResponse> getMealsBetweenDates(@AuthenticationPrincipal CustomSpringUser principal,
+                                                               @PathVariable long userId,
+                                                               @RequestParam(value = "startTime", required = true)
+                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                 LocalDateTime startTime,
+                                                               @RequestParam(value = "endTime", required = true)
+                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                 LocalDateTime endTime,
+                                                               Pageable pageable)
+  throws UnauthorizedException {
+    if ((principal).getId() != userId && !principal.hasAuthority(UserRole.USER_ADMIN)) {
+      throw new UnauthorizedException();
+    }
+    return mealService.findMealsInTimeRange(userId, startTime, endTime, pageable);
+  }
+
 
   @PutMapping("/users/{userId}/meals/{id}")
   public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal CustomSpringUser principal, @PathVariable long userId,

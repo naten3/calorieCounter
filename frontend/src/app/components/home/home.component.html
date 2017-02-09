@@ -2,11 +2,12 @@
 
 <div class="btn-toolbar">
   <div class="btn-group col-md-offset-3" role="group">
-    <button [disabled]="loadingPage || !hasPreviousPage()" (click)="previousPage()"
+    <button [disabled]="loadingPage || mealPage.first" (click)="previousPage()"
     class="btn btn-secondary" style="font-size=3em">←</button>
     <div class="btn btn-secondary">Page {{getPage()}} of {{mealPage.totalPages}}</div>
-    <button [disabled]="loadingPage || !hasNextPage()" (click)="nextPage()"
+    <button [disabled]="loadingPage || mealPage.last" (click)="nextPage()"
     class="btn btn-secondary" style="font-size=3em">→</button>
+    <cc-time-range-filter (timeFilter)="filterMeals($event)"></cc-time-range-filter>
   </div>
   <img *ngIf="loadingPage"
   [style.visibility]="loadingPage ? 'visible' : 'hidden'"

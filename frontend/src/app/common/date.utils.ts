@@ -12,4 +12,8 @@ export class DateUtils {
     return new Date( d.getTime() - ( d.getTimezoneOffset() * 60000 ))
     .toISOString().slice(0,19);
   }
+
+  public static getUTCDateString(d: Date) {
+    return d.toISOString().slice(0,19);
+  }
 }
