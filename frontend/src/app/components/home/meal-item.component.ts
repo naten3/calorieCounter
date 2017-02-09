@@ -14,6 +14,7 @@ import { Meal } from "../../models";
           <dd>{{meal.mealTime | date:'MMMM d yyyy, h:mm a'}}</dd>
         </dl>
      <a (click)="updateMealRequest()" class="btn btn-primary">Edit</a>
+     <a (click)="deleteMeal()" class="btn btn-primary">Delete</a>
     </div>
   </div>`,
   styleUrls: []
@@ -22,11 +23,16 @@ import { Meal } from "../../models";
 export class MealItemComponent {
   @Input() meal: Meal;
   @Output('updateMeal') updateMealEmitter: EventEmitter<Meal> = new EventEmitter<Meal>();
+  @Output('deleteMeal') deleteMealEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() {}
 
   updateMealRequest() {
     this.updateMealEmitter.emit(this.meal);
+  }
+
+  deleteMeal() {
+    this.deleteMealEmitter.emit(this.meal.id)
   }
 
 }

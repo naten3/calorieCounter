@@ -75,9 +75,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public filterMeals(timeRange: TimeRange) {
+  private filterMeals(timeRange: TimeRange) {
     this.mealService.getUserMealsInDateRange(this.userId, timeRange.startTime, timeRange.endTime, 0, HomeComponent.PAGE_SIZE).subscribe( mealPage => {
       this.mealPage = mealPage;
+    })
+  }
+
+  private deleteMeal(id: number) {
+    this.mealService.deleteMeal(id).subscribe( a => {
+      if (this.mealPage.items.length == 1 && !this.mealPage.first) {
+        this.previousPage();
+      }
+      this.updatePage(this.mealPage.number);
     })
   }
 
