@@ -7,7 +7,6 @@
     <div class="btn btn-secondary">Page {{getPage()}} of {{mealPage.totalPages}}</div>
     <button [disabled]="loadingPage || mealPage.last" (click)="nextPage()"
     class="btn btn-secondary" style="font-size=3em">→</button>
-    <cc-time-range-filter (timeFilter)="filterMeals($event)"></cc-time-range-filter>
   </div>
   <img *ngIf="loadingPage"
   [style.visibility]="loadingPage ? 'visible' : 'hidden'"
@@ -17,6 +16,8 @@
     <button (click)="createMealModal()" class="btn btn-secondary" style="font-size=3em">Create New</button>
   </div>
 </div>
+
+<cc-time-range-filter (timeFilter)="filterMeals($event)"></cc-time-range-filter>
 
 <div *ngFor="let meal of mealPage.items;">
   <cc-meal-item [meal]=meal (updateMeal)="updateMealModal($event)" class="col-md-offset-3"></cc-meal-item>

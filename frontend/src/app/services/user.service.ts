@@ -24,11 +24,12 @@ export class UserService {
     if (user == null) {
       let storageUser  = JSON.parse(localStorage.getItem(this.USER_LOCAL_KEY));
       if (storageUser != null) {
-        storageUser = new User(storageUser);
-        return this.checkValidSession(storageUser).map(sessionValid => {
+        let memoryUser = new User(storageUser);
+        memoryUser.token = storageUser.token;
+        return this.checkValidSession(memoryUser).map(sessionValid => {
           if (sessionValid) {
-            this.loginSubject.next(storageUser);
-            return storageUser;
+            this.loginSubject.next(memoryUser);
+            return memoryUser;
           } else {
             return null;
           }
