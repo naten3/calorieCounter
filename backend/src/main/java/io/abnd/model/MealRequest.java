@@ -1,10 +1,12 @@
 package io.abnd.model;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class MealRequest {
   private LocalDateTime mealTime;
   private int calorieValue;
+  @Size(max = 500)
   private String description;
 
   public MealRequest(){}

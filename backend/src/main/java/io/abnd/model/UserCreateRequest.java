@@ -1,12 +1,16 @@
 package io.abnd.model;
 
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 public class UserCreateRequest {
 
+  @Size(max = 100)
   private String username;
+  @Size(max = 100)
   private String password;
   private Optional<Integer> desiredCalories;
+  @Size(max = 300)
   private String email;
 
   public String getUsername() {
