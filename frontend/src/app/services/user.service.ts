@@ -23,8 +23,8 @@ export class UserService {
     let user: User = this.loginSubject.value;
     if (user == null) {
       let storageUser  = JSON.parse(localStorage.getItem(this.USER_LOCAL_KEY));
-      storageUser = new User(storageUser);
       if (storageUser != null) {
+        storageUser = new User(storageUser);
         return this.checkValidSession(storageUser).map(sessionValid => {
           if (sessionValid) {
             this.loginSubject.next(storageUser);

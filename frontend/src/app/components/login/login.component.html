@@ -19,7 +19,9 @@
                  <span class="help-inline" *ngIf="invalidLoginAttempt">An invalid username or password was entered.</span>
               </div>
             </div>
-            <!--TODO a [routerLink]="['/register']" class="btn btn-link">Register</a-->
         </div>
     </form>
+
+    <button (click)="register()" class="btn btn-primary">Register</button>
+    <cc-add-update-user-modal (userSave)="handleRegistrationRequest($event)" #addUpdateUser></cc-add-update-user-modal>
 </div>

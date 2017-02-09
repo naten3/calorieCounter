@@ -56,14 +56,9 @@ public class UserController {
     return userService.getAllNonadminUsers(pageable);
   }
 
-  @PostMapping("/admin/users")
-  public UserResponse createUser(@AuthenticationPrincipal CustomSpringUser principal,
-                                 @RequestBody UserCreateRequest userCreateRequest)
-  throws UnauthorizedException{
-    Set<String> authorities = principal.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.toSet());
-    if (!authorities.contains(UserRole.ADMIN) && !authorities.contains(UserRole.USER_ADMIN)) {
-      throw new UnauthorizedException();
-    }
+  @PostMapping("/users")
+  public UserResponse createUser(
+                                 @RequestBody UserCreateRequest userCreateRequest) {
     return userService.createUser(userCreateRequest);
   }
 

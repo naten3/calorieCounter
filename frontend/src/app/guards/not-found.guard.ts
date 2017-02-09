@@ -21,22 +21,17 @@ export class NotFoundGuard implements CanActivate, OnDestroy {
     })
   }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) :Observable<boolean>{
-    if (this.loggedIn) {
-      return Observable.of(true);
-    } else {
-      return this.userService.checkMemoryLoggedInObservable().map( user => {
-        let path: string;
-        if (user == null) {
-          path = "login"
-        } else {
-          path = LoginGuard.getUserHome(user);
-        }
-
-        this.router.navigate([path]);
-        return false;
-      })
-    }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) :Observable<boolean> {
+    return this.userService.checkMemoryLoggedInObservable().map( user => {
+      let path: string;
+      if (user == null) {
+        path = "login"
+      } else {
+        path = LoginGuard.getUserHome(user);
+      }
+      this.router.navigate([path]);
+      return false;
+    });
   }
 
   public static getUserHome(user: User) :string {

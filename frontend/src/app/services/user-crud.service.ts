@@ -38,33 +38,28 @@ export class UserCrudService {
   }
 
   public createUser( userCreateRequest: UserCreateRequest) :Observable<User>{
-    let headers: Headers = this.userService.getAuthHeader();
     let body: any = userCreateRequest.toRequestJson();
-    return this.http.post(`${this.baseUrl}/admin/users/`, body ,
-    {headers : headers}).map(res => {
+    return this.http.post(`${this.baseUrl}/users/`, body ,
+    {}).map(res => {
           return new User(res.json());
       });
   }
 
   public isUsernameAvailable(username: string) :Observable<boolean> {
-    let headers: Headers = this.userService.getAuthHeader();
     let params: URLSearchParams = new URLSearchParams();
     params.set('username', String(username));
 
     return this.http.get(`${this.baseUrl}/users/available`, {
-      headers : headers,
       search: params }).map(res => {
         return res.json().b;
       });
   }
 
   public isEmailAvailable(email: string) :Observable<boolean> {
-    let headers: Headers = this.userService.getAuthHeader();
     let params: URLSearchParams = new URLSearchParams();
     params.set('email', String(email));
 
     return this.http.get(`${this.baseUrl}/users/available`, {
-      headers : headers,
       search: params }).map(res => {
         return res.json().b;
       });
