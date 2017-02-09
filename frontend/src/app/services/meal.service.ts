@@ -49,7 +49,7 @@ export class MealService implements OnInit {
   public updateMeal( userId: number, mealSaveRequest: MealSaveRequest) :Observable<Meal>{
     let headers: Headers = this.userService.getAuthHeader();
     let body: any = mealSaveRequest.toRequestJson();
-    return this.http.put(`${this.baseUrl}/users/${userId}/meals/${mealSaveRequest.id}`, body ,
+    return this.http.put(`${this.baseUrl}/meals/${mealSaveRequest.id}`, body ,
     {headers : headers}).map(res => {
           return new Meal(res.json());
       });
@@ -61,6 +61,14 @@ export class MealService implements OnInit {
     return this.http.post(`${this.baseUrl}/users/${userId}/meals`, body ,
     {headers : headers}).map(res => {
           return new Meal(res.json());
+      });
+  }
+
+  public deleteMeal( mealId: number) :Observable<boolean> {
+    let headers: Headers = this.userService.getAuthHeader();
+    return this.http.delete(`${this.baseUrl}/meals/${mealId}`,
+    {headers : headers}).map(res => {
+        return res.status == 200;
       });
   }
 

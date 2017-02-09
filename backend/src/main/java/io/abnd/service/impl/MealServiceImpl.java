@@ -37,14 +37,17 @@ public class MealServiceImpl implements MealService {
 
   @Override
   public MealResponse createMeal(final long userId, final MealRequest mealRequest) {
-    Meal meal = convertToMeal(userId, null, mealRequest);
+    Meal meal = convertToMeal(userId, mealRequest);
     Meal resultMeal = mealRepository.save(meal);
     return convertToResponse(resultMeal);
   }
 
-  @Override
-  public MealResponse updateMeal(final long userId, final long mealId, final MealRequest mealRequest) {
-    Meal meal = convertToMeal(userId, mealId, mealRequest);
+  @Override public Optional<Meal> getMeal(final long id) {
+    return Optional.ofNullable(mealRepository.findOne(id));
+  }
+
+  @Override public MealResponse updateMeal(final MealRequest mealRequest, final Meal originalMeal) {
+    Meal meal = mergeMeal(originalMeal, mealRequest);
     Meal resultMeal = mealRepository.save(meal);
     return convertToResponse(resultMeal);
   }
@@ -58,14 +61,27 @@ public class MealServiceImpl implements MealService {
     return new MealResponse(meal.getId(), meal.getUserId(), meal.getMealTime(), meal.getCalorieValue(),meal.getDescription());
   }
 
-  private Meal convertToMeal(final long userId, final Long mealId, MealRequest mealRequest) {
+  private Meal convertToMeal(final long userId, MealRequest mealRequest) {
     Meal meal = new Meal();
-    meal.setId(mealId);
     meal.setUserId(userId);
     meal.setCalorieValue(mealRequest.getCalorieValue());
     meal.setDescription(mealRequest.getDescription());
     meal.setMealTime(mealRequest.getMealTime());
 
     return meal;
+  }
+
+  private Meal mergeMeal(final Meal meal, final MealRequest mealRequest) {
+    Meal newMeal = new Meal();
+    newMeal.setId(meal.getId());
+    newMeal.setUserId(meal.getUserId());
+    newMeal.setMealTime(mealRequest.getMealTime());
+    newMeal.setDescription(mealRequest.getDescription());
+    newMeal.setCalorieValue(mealRequest.getCalorieValue());
+    return newMeal;
+  }
+
+  @Override public void deleteMeal(final long id) {
+    mealRepository.delete(id);
   }
 }

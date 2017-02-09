@@ -1,6 +1,8 @@
 package io.abnd.rest;
 
+import io.abnd.entity.Meal;
 import io.abnd.entity.UserRole;
+import io.abnd.exception.ResourceNotFoundException;
 import io.abnd.exception.UnauthorizedException;
 import io.abnd.model.MealRequest;
 import io.abnd.model.MealResponse;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,14 +58,15 @@ public class MealController {
   }
 
 
-  @PutMapping("/users/{userId}/meals/{id}")
-  public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal CustomSpringUser principal, @PathVariable long userId,
+  @PutMapping("/meals/{id}")
+  public @ResponseBody MealResponse updateMeal(@AuthenticationPrincipal CustomSpringUser principal,
                                                @PathVariable long id, @RequestBody MealRequest mealRequest)
-  throws UnauthorizedException {
-    if ((principal).getId() != userId && !principal.hasAuthority(UserRole.USER_ADMIN)) {
+  throws UnauthorizedException, ResourceNotFoundException {
+    Meal meal = mealService.getMeal(id).orElseThrow(ResourceNotFoundException::new);
+    if ((principal).getId() != meal.getUserId() && !principal.hasAuthority(UserRole.USER_ADMIN)) {
       throw new UnauthorizedException();
     }
-    return mealService.updateMeal(userId, id, mealRequest);
+    return mealService.updateMeal(mealRequest, meal);
   }
 
   @PostMapping("/users/{userId}/meals")
@@ -74,4 +78,16 @@ public class MealController {
     }
     return mealService.createMeal(userId, mealRequest);
   }
+
+  @DeleteMapping("/meals/{id}")
+  public void deleteMeal(@AuthenticationPrincipal CustomSpringUser principal,
+                    @PathVariable long id)
+  throws UnauthorizedException, ResourceNotFoundException{
+    Meal meal = mealService.getMeal(id).orElseThrow(ResourceNotFoundException::new);
+    if ((principal).getId() != meal.getUserId() && !principal.hasAuthority(UserRole.USER_ADMIN)) {
+      throw new UnauthorizedException();
+    }
+    mealService.deleteMeal(id);
+  }
+
 }
